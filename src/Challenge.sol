@@ -24,18 +24,12 @@ contract Challenge {
         msg.sender.call("");
 
         require(lock);
-        require(
-            HasInteracted[msg.sender] == false,
-            "This address has interacted before"
-        );
+        require(HasInteracted[msg.sender] == false, "This address has interacted before");
 
         HasInteracted[msg.sender] = true;
         winners.push(tx.origin);
         string memory name_ = Names[tx.origin];
-        require(
-            keccak256(abi.encode(name_)) == keccak256(abi.encode("")),
-            "Not a unique winner"
-        );
+        require(keccak256(abi.encode(name_)) == keccak256(abi.encode("")), "Not a unique winner");
         Names[tx.origin] = _name;
     }
 
@@ -50,7 +44,7 @@ contract Challenge {
 
     function getAllwiners() external view returns (string[] memory _names) {
         _names = new string[](winners.length);
-        for (uint i; i < winners.length; i++) {
+        for (uint256 i; i < winners.length; i++) {
             _names[i] = Names[winners[i]];
         }
     }

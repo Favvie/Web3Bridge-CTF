@@ -4,7 +4,6 @@ pragma solidity ^0.8.18;
 /**
  * @notice the goal of this ctf is to drain all the functd from this contract.
  */
-
 contract W3BCXI {
     address owner;
     mapping(address => uint256) deposits;
@@ -36,7 +35,7 @@ contract W3BCXI {
     function withdraw() external {
         uint256 amount = deposits[msg.sender];
         deposits[msg.sender] = 0;
-        (bool success, ) = msg.sender.call{value: amount}("");
+        (bool success,) = msg.sender.call{value: amount}("");
         require(success);
     }
 
@@ -46,7 +45,7 @@ contract W3BCXI {
 
     function rescueFunds() external {
         require(deposits[msg.sender] == type(uint256).max); // only original owner can rescue
-        (bool success, ) = msg.sender.call{value: address(this).balance}("");
+        (bool success,) = msg.sender.call{value: address(this).balance}("");
         require(success);
     }
 
@@ -54,26 +53,21 @@ contract W3BCXI {
         owner = newOwner;
     }
 
-    function viewDeposit(address account) external view returns(uint256){
+    function viewDeposit(address account) external view returns (uint256) {
         return deposits[account];
     }
 
-    function _calculateFee(uint256 amount, uint256 bonusBps)
-        internal
-        view
-        returns (uint256)
-    {
+    function _calculateFee(uint256 amount, uint256 bonusBps) internal view returns (uint256) {
         unchecked {
             return (amount * (feeBps + bonusBps)) / BASIS_POINTS;
         }
     }
 
-    function drained() external view returns(bool) {
+    function drained() external view returns (bool) {
         return address(this).balance == 0;
     }
 
     receive() external payable {}
 
     fallback() external payable {}
-
 }

@@ -6,14 +6,16 @@ import {Test, console2} from "forge-std/Test.sol";
 
 contract ChallengeTest is Test {
     Challenge chal;
-    address owner = makeAddr('owner');
-    address user = makeAddr('user');
+    address owner = makeAddr("owner");
+    address user = makeAddr("user");
+
     function setUp() public {
         vm.createSelectFork("your-rpc-url");
         vm.startPrank(owner);
-        chal =  new Challenge();
+        chal = new Challenge();
         vm.stopPrank();
     }
+
     function test_pause_only_owner_can_pause() public {
         vm.prank(owner);
         chal.pause(true);
@@ -23,6 +25,7 @@ contract ChallengeTest is Test {
         vm.expectRevert();
         chal.pause(false);
     }
+
     function test_exploitMe_when_Paused_reverts() public {
         test_pause_only_owner_can_pause();
         vm.prank(user);
@@ -56,30 +59,23 @@ contract ChallengeTest is Test {
         chal.exploit_me("user");
     }
 
-    function test_getAllWinners() public{
-       test_can_reenter_and_set_lock();
-       string[] memory _names2 = chal.getAllwiners();
-       assertEq(_names2[0], "user");
+    function test_getAllWinners() public {
+        test_can_reenter_and_set_lock();
+        string[] memory _names2 = chal.getAllwiners();
+        assertEq(_names2[0], "user");
     }
 
-    function test_getAllWinners_onChain() public view{
-       string[] memory _names = chal.getAllwiners();
-       for(uint i; i < _names.length; i++){
-           console2.log("winner", i + 1, _names[i]);
-       }
-        
+    function test_getAllWinners_onChain() public view {
+        string[] memory _names = chal.getAllwiners();
+        for (uint256 i; i < _names.length; i++) {
+            console2.log("winner", i + 1, _names[i]);
+        }
     }
 
+    uint256 count;
 
-
-
-    uint count;
     receive() external payable {
-       
-             chal.lock_me();
-            console2.log("locked");
-
+        chal.lock_me();
+        console2.log("locked");
     }
-
-
 }

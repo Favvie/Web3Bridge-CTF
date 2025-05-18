@@ -12,13 +12,11 @@ contract ChallengeTwoScript is Script {
     ChallengeTwo public target;
     // address payable public attacker;
     ExploitContract public exploit;
-    
-
 
     function setUp() public {
         // Connect to the already deployed contract
         target = ChallengeTwo(payable(address(CONTRACT_ADDRESS))); // Replace with actual contract address
-        
+
         // exploit = new Exploit(0x771F8f8FD270eD99db6a3B5B7e1d9f6417394249);
         // Set up attacker account with your private key
         // uint256 privateKey = vm.envUint("PRIVATE_KEY");
@@ -33,8 +31,6 @@ contract ChallengeTwoScript is Script {
         exploit.exploitPoints();
         exploit.completeChallenge();
 
-       
-        
         vm.stopBroadcast();
     }
 }

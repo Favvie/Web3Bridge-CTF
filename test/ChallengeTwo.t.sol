@@ -8,27 +8,26 @@ import {Test, console2} from "forge-std/Test.sol";
 
 contract ChallengeTwoTest is Test {
     ChallengeTwo chal;
-    address owner = makeAddr('owner');
-    address user = makeAddr('user');
+    address owner = makeAddr("owner");
+    address user = makeAddr("user");
+
     function setUp() public {
         vm.createSelectFork("https://eth-sepolia.g.alchemy.com/v2/AXZTpQuCryhmuSxFjmGQ5QNpExmCcLhq");
         vm.startPrank(owner);
-        chal =  new ChallengeTwo();
+        chal = new ChallengeTwo();
         vm.stopPrank();
     }
+
     function test_passKey_and_getInvalidKey() public {
         vm.prank(owner);
         vm.expectRevert();
-        chal.passKey(1);  
-              
+        chal.passKey(1);
     }
 
     function test_passKey_with_validKey() public {
-
-        chal.passKey(2524);        
+        chal.passKey(2524);
         bool solved = chal.hasSolved1(tx.origin);
         assertTrue(solved);
-
     }
 
     function test_getEnoughPoint_requireHasSolved1() public {
@@ -41,7 +40,7 @@ contract ChallengeTwoTest is Test {
     function test_getEnoughPoint() public {
         chal.passKey(2524);
         chal.getENoughPoint("favour");
-        
+
         console2.log("chal.userPoint(tx.origin)", chal.userPoint(tx.origin));
         assertEq(chal.userPoint(tx.origin), 4);
     }
@@ -77,19 +76,12 @@ contract ChallengeTwoTest is Test {
         chal.addYourName();
     }
 
-
-
-
-fallback() external {
-        if(address(chal).balance >= 0) {
+    fallback() external {
+        if (address(chal).balance >= 0) {
             // Re-enter until we get enough points
             try chal.getENoughPoint("favour") {} catch {}
         }
     }
-
-
-
-
 
     // function test_pause_only_owner_can_pause() public {
     //     vm.prank(owner);
@@ -144,19 +136,14 @@ fallback() external {
     //    for(uint i; i < _names.length; i++){
     //        console2.log("winner", i + 1, _names[i]);
     //    }
-        
+
     // }
-
-
-
 
     // uint count;
     // receive() external payable {
-       
+
     //          chal.lock_me();
     //         console2.log("locked");
 
     // }
-
-
 }
